@@ -1,7 +1,5 @@
 import React from "react";
 import styled from "styled-components";
-import axios from "axios";
-import SimpleReactValidator from "simple-react-validator";
 
 import colors from "../colors.json";
 import logo from "../assets/ideable.svg";
@@ -58,29 +56,12 @@ const Login = styled.div`
     max-width: 400px;
     transition: all 0.5s linear;
 
-    .message {
-      margin-top: 1rem;
-      padding: 0.5rem;
-      color: #dc3545 !important;
-      background-color: ${colors.background};
-      border: 1px solid ${colors.textgrey};
-      border-radius: 0.2rem;
-    }
     .button {
       margin-top: 2rem;
       background-color: ${colors.blue};
       padding: 0.75rem 1rem;
       border-radius: 0.5rem;
       text-align: center;
-      color: white;
-      outline: none;
-      font-size: inherit;
-      font-weight: inherit;
-      font-family: inherit;
-
-      &:disabled {
-        filter: brightness(0.5);
-      }
     }
 
     .label {
@@ -96,14 +77,6 @@ const Login = styled.div`
       background-color: ${colors.background};
       border: solid 1px ${colors.textgrey};
       color: white;
-      animation: slide-up 0.4s ease;
-    }
-
-    .text-danger {
-      color: #dc3545 !important;
-      margin-left: 0.5rem;
-      margin-top: 0.2rem;
-      font-size: 0.9rem;
       animation: slide-up 0.4s ease;
     }
 
@@ -202,68 +175,10 @@ const Note = styled.div`
   }
 `;
 
-export default class LoginPage extends React.Component {
+export default class Dashboard extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {
-      signup: false,
-      processing: false,
-      username: "",
-      email: "",
-      password: "",
-      message: "",
-    };
-
-    this.handleInputChange = this.handleInputChange.bind(this);
-    this.handleSubmit = this.handleSubmit.bind(this);
-
-    this.validator = new SimpleReactValidator();
-  }
-
-  handleInputChange(event) {
-    const target = event.target;
-    const value = target.value;
-    const name = target.name;
-
-    this.setState({
-      [name]: value,
-    });
-  }
-
-  handleSubmit(event) {
-    this.setState({ message: "" });
-    if (
-      this.validator.fieldValid("email") &&
-      this.validator.fieldValid("password") &&
-      (!this.state.signup || this.validator.fieldValid("username"))
-    ) {
-      this.setState({ processing: true });
-
-      const endpoint = "/user/" + (this.state.signup ? "signup" : "login");
-
-      axios
-        .post(endpoint, {
-          username: this.state.username,
-          email: this.state.email,
-          password: this.state.password,
-        })
-        .then((response) => {
-          if (response.data.token) {
-            localStorage.setItem("user", JSON.stringify(response.data));
-            console.log(response.data);
-          }
-          this.props.refresh();
-        })
-        .catch((error) => {
-          this.setState({ message: error.response.data.message });
-          this.setState({ processing: false });
-        });
-    } else {
-      this.validator.showMessages();
-      // rerender to show messages for the first time
-      // you can use the autoForceUpdate option to do this automatically`
-      this.forceUpdate();
-    }
+    this.state = { signup: false };
   }
 
   render() {
@@ -279,72 +194,23 @@ export default class LoginPage extends React.Component {
           </div>
           <div className="container">
             <div className="label username">Username</div>
-            <input
-              type="text"
-              name="username"
-              value={this.state.username}
-              onChange={this.handleInputChange}
-              className="username"
-            />
-            {this.validator.message(
-              "username",
-              this.state.username,
-              "required",
-              { className: "text-danger username" }
-            )}
+            <input type="text" className="username" />
 
             <div className="label">Email</div>
-            <input
-              type="email"
-              name="email"
-              value={this.state.email}
-              onChange={this.handleInputChange}
-            />
-            {this.validator.message(
-              "email",
-              this.state.email,
-              "required|email",
-              { className: "text-danger" }
-            )}
+            <input type="email" />
 
             <div className="label">Password</div>
-            <input
-              type="password"
-              name="password"
-              value={this.state.password}
-              onChange={this.handleInputChange}
-            />
-            {this.validator.message(
-              "password",
-              this.state.password,
-              "required|min:6",
-              { className: "text-danger" }
-            )}
+            <input type="password" />
 
-            <button
-              className="button"
-              onClick={this.handleSubmit}
-              disabled={this.state.processing}
-            >
-              {this.state.processing
-                ? "Please wait..."
-                : this.state.signup
-                ? "Sign Up"
-                : "Login"}
-            </button>
-            {this.state.message && (
-              <div className="message">{this.state.message}</div>
-            )}
+            <div className="button">
+              {this.state.signup ? "Sign Up" : "Login"}
+            </div>
           </div>
           <div className="signup-message">
             {this.state.signup
               ? "Already have an account? "
               : "Don't have an account yet? "}
-            <span
-              onClick={() =>
-                this.setState({ signup: !this.state.signup, username: "" })
-              }
-            >
+            <span onClick={() => this.setState({ signup: !this.state.signup })}>
               {this.state.signup ? "Login" : "Sign Up"}
             </span>
           </div>
@@ -352,11 +218,9 @@ export default class LoginPage extends React.Component {
         <Landing>
           <div></div>
           <Note>
-            <div className="title">Ideable</div>
+            <div className="title">DASHBOARD</div>
             <img className="logo" src={logo} />
-            <div className="note">
-              Organize yourself, at the speed of thought!
-            </div>
+            <div className="note">{JSON.stringify(this.props.user)}</div>
           </Note>
           <div></div>
         </Landing>
