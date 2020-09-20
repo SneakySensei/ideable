@@ -38,7 +38,7 @@ router.post(
 
       if (user) {
         return res.status(400).json({
-          message: "User Already Exists",
+          message: "User already exists. Please use a different email.",
         });
       }
 
@@ -68,6 +68,7 @@ router.post(
         (err, token) => {
           if (err) throw err;
           res.status(200).json({
+            details: user,
             token,
           });
         }
@@ -109,7 +110,7 @@ router.post(
       });
       if (!user)
         return res.status(400).json({
-          message: "No user found with that email. New user? SignUp",
+          message: "No user found with that email. New user? Signup",
         });
 
       const isMatch = await bcrypt.compare(password, user.password);
@@ -133,6 +134,7 @@ router.post(
         (err, token) => {
           if (err) throw err;
           res.status(200).json({
+            details: user,
             token,
           });
         }
