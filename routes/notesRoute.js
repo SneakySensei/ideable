@@ -16,7 +16,11 @@ const auth = require("../middleware/auth");
 router.get("/list", auth, async (req, res) => {
   try {
     const notes = await Note.find({ userId: req.user.id });
-    res.status(200).json(notes);
+    res.status(200).json(
+      notes.reverse().sort((a, b) => {
+        return a.isPinned === b.isPinned ? 0 : a.isPinned ? -1 : 1;
+      })
+    );
   } catch (err) {
     res.status(404).json({ message: "Error in Fetching notes", error: err });
   }
@@ -39,7 +43,11 @@ router.post("/add", auth, async (req, res) => {
     await note.save();
 
     const notes = await Note.find({ userId: req.user.id });
-    res.status(200).json(notes);
+    res.status(200).json(
+      notes.reverse().sort((a, b) => {
+        return a.isPinned === b.isPinned ? 0 : a.isPinned ? -1 : 1;
+      })
+    );
   } catch (err) {
     console.log(err.message);
     res
@@ -53,7 +61,11 @@ router.delete("/:noteId", auth, async (req, res) => {
     await Note.remove({ _id: req.params.noteId });
 
     const notes = await Note.find({ userId: req.user.id });
-    res.status(200).json(notes);
+    res.status(200).json(
+      notes.reverse().sort((a, b) => {
+        return a.isPinned === b.isPinned ? 0 : a.isPinned ? -1 : 1;
+      })
+    );
   } catch (err) {
     res.status(404).json({ message: "Error in deleting note", error: err });
   }
@@ -72,7 +84,11 @@ router.patch("/:noteId", auth, async (req, res) => {
     await Note.findOneAndUpdate({ _id: req.params.noteId }, payload);
 
     const notes = await Note.find({ userId: req.user.id });
-    res.status(200).json(notes);
+    res.status(200).json(
+      notes.reverse().sort((a, b) => {
+        return a.isPinned === b.isPinned ? 0 : a.isPinned ? -1 : 1;
+      })
+    );
   } catch (err) {
     res.status(404).json({ message: "Error in updating note", error: err });
   }

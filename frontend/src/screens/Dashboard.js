@@ -70,6 +70,16 @@ const DashboardContainer = styled.div`
       align-items: center;
       font-size: 1.5rem;
 
+      &:after {
+        content: "Ideable";
+      }
+
+      @media (max-width: 768px) {
+        &:after {
+          content: "";
+        }
+      }
+
       img {
         height: 2rem;
         margin: 0.75rem 0.5rem 0.75rem 2rem;
@@ -115,6 +125,42 @@ const DashboardContainer = styled.div`
       }
     }
 
+    .color {
+      .radio {
+        display: inline-block;
+        border-radius: 4rem;
+        margin: 0 0.1rem;
+        border: 0.2rem solid ${colors.text};
+
+        &.c0 {
+          border-color: ${colors.text};
+        }
+        &.c1 {
+          border-color: ${colors.blue};
+        }
+        &.c2 {
+          border-color: ${colors.yellow};
+        }
+        &.c3 {
+          border-color: ${colors.white};
+        }
+        &.c4 {
+          border-color: ${colors.magenta};
+        }
+        &.c5 {
+          border-color: ${colors.green};
+        }
+        &.c6 {
+          border-color: ${colors.orange};
+        }
+      }
+      input {
+        margin: 0.19rem 0.19rem 0 0.19rem;
+        height: 1.2rem;
+        width: 1.2rem;
+      }
+    }
+
     .profile-dropdown {
       position: relative;
       display: inline-block;
@@ -122,7 +168,7 @@ const DashboardContainer = styled.div`
 
     .profile {
       height: 2rem;
-      margin: 0.75rem 2rem 0.75rem 0;
+      margin: 0.75rem 2rem 0.75rem 0.75rem;
       cursor: pointer;
     }
 
@@ -236,41 +282,25 @@ export default class Dashboard extends React.Component {
       user: this.props.user,
       isDropdownOpen: false,
       notes: [],
-      filteredNotes: [],
       filter: "",
       editorText: false,
       activeNote: undefined,
+      color: 0,
     };
 
     this.refresh = this.refresh.bind(this);
     this.handleSearch = this.handleSearch.bind(this);
+    this.handleColorChange = this.handleColorChange.bind(this);
     this.handleOpenEditor = this.handleOpenEditor.bind(this);
   }
 
   refresh(notes) {
-    var filteredNotes = notes.sort((a, b) => {
-      return a.isPinned === b.isPinned ? 0 : a.isPinned ? -1 : 1;
-    });
-
-    this.setState({ notes: notes, filteredNotes: filteredNotes, filter: "" });
+    this.setState({ notes: notes });
     this.props.refresh();
   }
 
   handleSearch(event, notes) {
     this.setState({ filter: event.target.value });
-    const lowercaseFilter = event.target.value.toLowerCase();
-    var sorted = notes.sort((a, b) => {
-      return a.isPinned === b.isPinned ? 0 : a.isPinned ? -1 : 1;
-    });
-
-    this.setState({
-      filteredNotes: sorted.filter((item) => {
-        return (
-          item["title"].toLowerCase().includes(lowercaseFilter) ||
-          item["data"].toLowerCase().includes(lowercaseFilter)
-        );
-      }),
-    });
   }
 
   componentDidMount() {
@@ -278,10 +308,7 @@ export default class Dashboard extends React.Component {
     axios
       .get("/notes/list", { headers: { token: this.state.user.token } })
       .then((response) => {
-        var filteredNotes = response.data.sort((a, b) => {
-          return a.isPinned === b.isPinned ? 0 : a.isPinned ? -1 : 1;
-        });
-        this.setState({ notes: response.data, filteredNotes: filteredNotes });
+        this.setState({ notes: response.data });
         this.props.refresh();
       })
       .catch((error) => {
@@ -289,14 +316,14 @@ export default class Dashboard extends React.Component {
           localStorage.removeItem("user");
           this.props.refresh();
         }
-      })
-      .finally(() => {
-        console.log(this.state.filteredNotes);
       });
   }
 
-  handleColorSearch(event) {
-    console.log(event.target.value);
+  handleColorChange(evt) {
+    this.setState({
+      color: parseInt(evt.target.value),
+    });
+    console.log(this.state.color);
   }
 
   handleCloseEditor() {
@@ -308,6 +335,19 @@ export default class Dashboard extends React.Component {
   }
 
   render() {
+    const lowercaseFilter = this.state.filter.toLowerCase();
+    const filtered = this.state.notes.filter((item) => {
+      return (
+        item["title"].toLowerCase().includes(lowercaseFilter) ||
+        item["data"].toLowerCase().includes(lowercaseFilter)
+      );
+    });
+
+    const colorFiltered = filtered.filter((item) => {
+      if (this.state.color === 0) return true;
+      return item["color"] === this.state.color;
+    });
+
     return (
       <DashboardContainer>
         {this.state.notes.length !== 0 && (
@@ -341,7 +381,6 @@ export default class Dashboard extends React.Component {
         <nav>
           <div className="logo">
             <img src={logo} />
-            Ideable
           </div>
           <div className="search">
             <svg
@@ -382,18 +421,79 @@ export default class Dashboard extends React.Component {
               />
             </svg>
           </div>
-          <div
-            className="color-search"
-            onChange={this.handleColorSearch.bind(this)}
-          >
-            <input type="radio" id="c0" name="color" value="c0" />
-            <input type="radio" id="c1" name="color" value="c1" />
-            <input type="radio" id="c2" name="color" value="c2" />
-            <input type="radio" id="c3" name="color" value="c3" />
-            <input type="radio" id="c4" name="color" value="c4" />
-            <input type="radio" id="c5" name="color" value="c5" />
-            <input type="radio" id="c6" name="color" value="c6" />
+          <div className="color">
+            <div className="radio c0">
+              <input
+                type="radio"
+                id="c0"
+                name="color"
+                value="0"
+                checked={this.state.color === 0}
+                onChange={this.handleColorChange}
+              />
+            </div>
+            <div className="radio c1">
+              <input
+                type="radio"
+                id="c1"
+                name="color"
+                value="1"
+                checked={this.state.color === 1}
+                onChange={this.handleColorChange}
+              />
+            </div>
+            <div className="radio c2">
+              <input
+                type="radio"
+                id="c2"
+                name="color"
+                value="2"
+                checked={this.state.color === 2}
+                onChange={this.handleColorChange}
+              />
+            </div>
+            <div className="radio c3">
+              <input
+                type="radio"
+                id="c3"
+                name="color"
+                value="3"
+                checked={this.state.color === 3}
+                onChange={this.handleColorChange}
+              />
+            </div>
+            <div className="radio c4">
+              <input
+                type="radio"
+                id="c4"
+                name="color"
+                value="4"
+                checked={this.state.color === 4}
+                onChange={this.handleColorChange}
+              />
+            </div>
+            <div className="radio c5">
+              <input
+                type="radio"
+                id="c5"
+                name="color"
+                value="5"
+                checked={this.state.color === 5}
+                onChange={this.handleColorChange}
+              />
+            </div>
+            <div className="radio c6">
+              <input
+                type="radio"
+                id="c6"
+                name="color"
+                value="6"
+                checked={this.state.color === 6}
+                onChange={this.handleColorChange}
+              />
+            </div>
           </div>
+
           <div className="profile-dropdown">
             <img
               src={profile}
@@ -430,7 +530,7 @@ export default class Dashboard extends React.Component {
             className="my-masonry-grid"
             columnClassName="my-masonry-grid_column"
           >
-            {this.state.filteredNotes.map((note, index) => (
+            {colorFiltered.map((note, index) => (
               <Note
                 handleOpen={(e) => {
                   this.handleOpenEditor(note);

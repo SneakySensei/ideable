@@ -70,7 +70,7 @@ const EditorContainer = styled.div`
           display: inline-block;
           border-radius: 4rem;
           margin: 0 0.1rem;
-          border: 0.1rem solid ${colors.text};
+          border: 0.2rem solid ${colors.text};
 
           &.c0 {
             border-color: ${colors.text};
@@ -96,8 +96,8 @@ const EditorContainer = styled.div`
         }
         input {
           margin: 0.19rem 0.19rem 0 0.19rem;
-          height: 1.5rem;
-          width: 1.5rem;
+          height: 1.2rem;
+          width: 1.2rem;
         }
       }
     }
