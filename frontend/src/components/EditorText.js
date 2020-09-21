@@ -102,12 +102,28 @@ const EditorContainer = styled.div`
       }
     }
 
+    .title {
+      font-size: 13pt;
+      margin: 0.75rem 1rem;
+      outline-style: none;
+      color: white;
+      font-weight: bold;
+      border: none;
+      background-image: none;
+      background-color: transparent;
+      -webkit-box-shadow: none;
+      -moz-box-shadow: none;
+      box-shadow: none;
+      border-bottom: 1px solid white;
+    }
+
     .content {
       outline: none;
       flex: 1;
       margin: 0 1rem;
       margin-bottom: 1rem;
       overflow-y: scroll;
+      color: ${colors.text};
 
       &::-webkit-scrollbar {
         width: 0.5rem;
@@ -198,6 +214,8 @@ export default class EditorText extends React.Component {
   };
 
   handleColorChange = (evt) => {
+    evt.stopPropagation();
+    console.log(evt.target.value);
     this.setState({
       color: parseInt(evt.target.value),
     });
@@ -242,7 +260,7 @@ export default class EditorText extends React.Component {
                 <input
                   type="radio"
                   id="c0"
-                  name="color"
+                  name="colorSelect"
                   value="0"
                   checked={this.state.color === 0}
                   onChange={this.handleColorChange}
@@ -252,7 +270,7 @@ export default class EditorText extends React.Component {
                 <input
                   type="radio"
                   id="c1"
-                  name="color"
+                  name="colorSelect"
                   value="1"
                   checked={this.state.color === 1}
                   onChange={this.handleColorChange}
@@ -262,7 +280,7 @@ export default class EditorText extends React.Component {
                 <input
                   type="radio"
                   id="c2"
-                  name="color"
+                  name="colorSelect"
                   value="2"
                   checked={this.state.color === 2}
                   onChange={this.handleColorChange}
@@ -272,7 +290,7 @@ export default class EditorText extends React.Component {
                 <input
                   type="radio"
                   id="c3"
-                  name="color"
+                  name="colorSelect"
                   value="3"
                   checked={this.state.color === 3}
                   onChange={this.handleColorChange}
@@ -282,7 +300,7 @@ export default class EditorText extends React.Component {
                 <input
                   type="radio"
                   id="c4"
-                  name="color"
+                  name="colorSelect"
                   value="4"
                   checked={this.state.color === 4}
                   onChange={this.handleColorChange}
@@ -292,7 +310,7 @@ export default class EditorText extends React.Component {
                 <input
                   type="radio"
                   id="c5"
-                  name="color"
+                  name="colorSelect"
                   value="5"
                   checked={this.state.color === 5}
                   onChange={this.handleColorChange}
@@ -302,7 +320,7 @@ export default class EditorText extends React.Component {
                 <input
                   type="radio"
                   id="c6"
-                  name="color"
+                  name="colorSelect"
                   value="6"
                   checked={this.state.color === 6}
                   onChange={this.handleColorChange}
@@ -331,6 +349,7 @@ export default class EditorText extends React.Component {
             value={this.state.title}
             onChange={this.handleChangeTitle}
             className="title"
+            placeholder="Add Title"
           />
           <ContentEditable
             className="content"
