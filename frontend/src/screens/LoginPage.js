@@ -121,6 +121,26 @@ const Login = styled.div`
         transform: translateY(0);
       }
     }
+
+    @keyframes rotate {
+      0% {
+        opacity: 0;
+        transform: rotate(3deg);
+      }
+      33% {
+        opacity: 0.7;
+        transform: rotate(-2deg);
+      }
+
+      66% {
+        opacity: 1;
+        transform: rotate(1deg);
+      }
+
+      100% {
+        transform: rotate(0deg);
+      }
+    }
   }
 
   .signup-message {

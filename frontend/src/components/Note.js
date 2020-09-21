@@ -1,6 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 import axios from "axios";
+import processString from "react-process-string";
 
 import colors from "../assets/colors.json";
 import pinOn from "../assets/pin-on.svg";
@@ -14,7 +15,11 @@ const Note = styled.div`
   margin-bottom: 1rem;
   padding: 1rem 1rem 0 1rem;
   border-radius: 0.5rem;
+  cursor: default;
+  max-height: 500px;
+  overflow-y: hidden;
   box-shadow: 0 1.5px 8px rgba(0, 0, 0, 0.1), 0 2px 5px rgba(0, 0, 0, 0.2);
+  animation: rotate 0.8s ease;
 
   &.c1 {
     border-color: ${colors.blue};
@@ -51,6 +56,9 @@ const Note = styled.div`
     padding: 0 0 0.5rem 0;
     font-weight: bold;
     overflow-wrap: break-word;
+    word-wrap: break-word;
+  }
+  .message {
     word-wrap: break-word;
   }
 
@@ -94,7 +102,6 @@ const Note = styled.div`
     }
   }
 `;
-
 export default class Dashboard extends React.Component {
   constructor(props) {
     super(props);
@@ -104,7 +111,10 @@ export default class Dashboard extends React.Component {
     this.handlePin = this.handlePin.bind(this);
   }
 
-  handlePin() {
+  componentDidMount() {}
+
+  handlePin(e) {
+    e.stopPropagation();
     console.log("Pinned");
     var payload = {};
     if (this.props.isPinned) {
@@ -121,14 +131,14 @@ export default class Dashboard extends React.Component {
       })
       .catch((error) => {
         console.log(error);
-        if (error.response.data.message === "Invalid Token") {
-          localStorage.removeItem("user");
-          this.props.refresh();
-        }
+
+        localStorage.removeItem("user");
+        this.props.refresh();
       });
   }
 
-  handleDelete() {
+  handleDelete(e) {
+    e.stopPropagation();
     axios
       .delete(`/notes/${this.props.noteId}`, {
         headers: { token: this.props.token },
@@ -137,20 +147,19 @@ export default class Dashboard extends React.Component {
         this.props.refresh(response.data);
       })
       .catch((error) => {
-        if (error.response.data.message === "Invalid Token") {
-          localStorage.removeItem("user");
-          this.props.refresh();
-        }
+        localStorage.removeItem("user");
+        this.props.refresh();
       });
   }
 
   render() {
     return (
-      <Note className={"c" + this.props.color}>
+      <Note onClick={this.props.handleOpen} className={"c" + this.props.color}>
         <div className="title">{this.props.title}</div>
-        <div className="message" contentEditable={true} role="textbox">
-          {this.props.value}
-        </div>
+        <div
+          className="message"
+          dangerouslySetInnerHTML={{ __html: this.props.value }}
+        ></div>
         <div className="blade">
           <div className="delete button" onClick={this.handleDelete}>
             <svg

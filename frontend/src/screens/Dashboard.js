@@ -1,13 +1,14 @@
 import React from "react";
 import styled from "styled-components";
 import Masonry from "react-masonry-css";
+import axios from "axios";
 
 import colors from "../assets/colors.json";
 import logo from "../assets/ideable.svg";
 import profile from "../assets/profile.svg";
 
 import Note from "../components/Note";
-import axios from "axios";
+import EditorText from "../components/EditorText";
 
 const DashboardContainer = styled.div`
   background-color: ${colors.background};
@@ -15,6 +16,39 @@ const DashboardContainer = styled.div`
   height: 100vh;
   display: flex;
   flex-direction: column;
+
+  .add-button {
+    position: absolute;
+    z-index: 5;
+    right: 1rem;
+    bottom: 0.75rem;
+
+    svg {
+      width: 4rem;
+      color: white;
+      border-radius: 5rem;
+      background-color: ${colors.blue};
+      transition: background 0.3s ease;
+      box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+      animation: slide-up 0.4s ease;
+
+      &:hover {
+        filter: brightness(1.2);
+      }
+      &:active {
+        filter: brightness(1);
+        opacity: 0.8;
+      }
+    }
+  }
+
+  .editor {
+    display: none;
+
+    &.active {
+      display: grid;
+    }
+  }
 
   nav {
     display: flex;
@@ -204,10 +238,13 @@ export default class Dashboard extends React.Component {
       notes: [],
       filteredNotes: [],
       filter: "",
+      editorText: false,
+      activeNote: undefined,
     };
 
     this.refresh = this.refresh.bind(this);
     this.handleSearch = this.handleSearch.bind(this);
+    this.handleOpenEditor = this.handleOpenEditor.bind(this);
   }
 
   refresh(notes) {
@@ -258,9 +295,49 @@ export default class Dashboard extends React.Component {
       });
   }
 
+  handleColorSearch(event) {
+    console.log(event.target.value);
+  }
+
+  handleCloseEditor() {
+    this.setState({ editorText: false, activeNote: undefined });
+  }
+
+  handleOpenEditor(note) {
+    this.setState({ editorText: true, activeNote: note });
+  }
+
   render() {
     return (
       <DashboardContainer>
+        {this.state.notes.length !== 0 && (
+          <div className="add-button">
+            <svg
+              onClick={() => {
+                this.handleOpenEditor(undefined);
+              }}
+              className="w-6 h-6"
+              fill="currentColor"
+              viewBox="0 0 20 20"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                fillRule="evenodd"
+                d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z"
+                clipRule="evenodd"
+              />
+            </svg>
+          </div>
+        )}
+        {this.state.editorText && (
+          <EditorText
+            className={"editor active"}
+            handleClose={this.handleCloseEditor.bind(this)}
+            note={this.state.activeNote}
+            refresh={this.refresh}
+            token={this.state.user.token}
+          />
+        )}
         <nav>
           <div className="logo">
             <img src={logo} />
@@ -305,6 +382,18 @@ export default class Dashboard extends React.Component {
               />
             </svg>
           </div>
+          <div
+            className="color-search"
+            onChange={this.handleColorSearch.bind(this)}
+          >
+            <input type="radio" id="c0" name="color" value="c0" />
+            <input type="radio" id="c1" name="color" value="c1" />
+            <input type="radio" id="c2" name="color" value="c2" />
+            <input type="radio" id="c3" name="color" value="c3" />
+            <input type="radio" id="c4" name="color" value="c4" />
+            <input type="radio" id="c5" name="color" value="c5" />
+            <input type="radio" id="c6" name="color" value="c6" />
+          </div>
           <div className="profile-dropdown">
             <img
               src={profile}
@@ -315,7 +404,7 @@ export default class Dashboard extends React.Component {
             />
             <div
               id="profile-dropdown"
-              class={
+              className={
                 "dropdown-content" +
                 (this.state.isDropdownOpen ? " active" : "")
               }
@@ -343,6 +432,9 @@ export default class Dashboard extends React.Component {
           >
             {this.state.filteredNotes.map((note, index) => (
               <Note
+                handleOpen={(e) => {
+                  this.handleOpenEditor(note);
+                }}
                 key={note._id}
                 noteId={note._id}
                 color={note.color}

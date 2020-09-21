@@ -23,16 +23,18 @@ router.get("/list", auth, async (req, res) => {
 });
 
 router.post("/add", auth, async (req, res) => {
-  const { title, type, data, isPinned, color } = req.body;
+  const { title, type, value, isPinned, color } = req.body;
 
-  note = new Note({
-    userId: req.user.id,
-    title,
-    type,
-    data,
-    isPinned,
-    color,
-  });
+  var payload = {};
+  if (color !== undefined) payload.color = color;
+  if (isPinned !== undefined) payload.isPinned = isPinned;
+  if (title !== undefined) payload.title = title;
+  if (type !== undefined) payload.type = type;
+
+  payload.data = value;
+  payload.userId = req.user.id;
+
+  note = new Note(payload);
   try {
     await note.save();
 

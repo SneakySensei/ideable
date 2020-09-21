@@ -1,14 +1,15 @@
 const mongoose = require("mongoose");
 
 const NoteSchema = mongoose.Schema({
+  date: { type: Date, default: Date.now() },
+
   userId: { type: mongoose.Schema.Types.ObjectId, required: true },
-  title: { type: String },
-  type: { type: String, required: true },
   data: { type: mongoose.Schema.Types.Mixed, required: true },
 
+  color: { type: Number, default: 0 },
   isPinned: { type: Boolean, default: false },
-  color: { type: Number, required: true },
-  date: { type: Date, default: Date.now() },
+  title: { type: String, default: "" },
+  type: { type: String, default: "string" },
 });
 
 module.exports = mongoose.model("Note", NoteSchema);
