@@ -527,29 +527,54 @@ export default class Dashboard extends React.Component {
           </div>
         </nav>
         <NotesContainer>
-          <Masonry
-            breakpointCols={{ default: 4, 992: 3, 768: 2, 576: 1 }}
-            className="my-masonry-grid"
-            columnClassName="my-masonry-grid_column"
-          >
-            {colorFiltered.map((note, index) => (
-              <Note
-                handleOpen={(e) => {
-                  this.handleOpenEditor(note);
-                }}
-                key={note._id}
-                noteId={note._id}
-                color={note.color}
-                isPinned={note.isPinned}
-                title={note.title}
-                type={note.type}
-                value={note.data}
-                date={note.date}
-                refresh={this.refresh}
-                token={this.state.user.token}
-              />
-            ))}
-            {/* <Note value="1" />
+          {!this.state.showAddButton && (
+            <div
+              style={{
+                display: "grid",
+                placeItems: "center",
+                fontSize: "1.5rem",
+                color: colors.text,
+              }}
+            >
+              Loading...
+            </div>
+          )}
+          {this.state.showAddButton && this.state.notes.length === 0 && (
+            <div
+              style={{
+                display: "grid",
+                placeItems: "center",
+                fontSize: "1.5rem",
+                color: colors.text,
+              }}
+            >
+              This place is empty. Start by adding a note.
+            </div>
+          )}
+          {this.state.showAddButton && (
+            <Masonry
+              breakpointCols={{ default: 4, 992: 3, 768: 2, 576: 1 }}
+              className="my-masonry-grid"
+              columnClassName="my-masonry-grid_column"
+            >
+              {colorFiltered.map((note, index) => (
+                <Note
+                  handleOpen={(e) => {
+                    this.handleOpenEditor(note);
+                  }}
+                  key={note._id}
+                  noteId={note._id}
+                  color={note.color}
+                  isPinned={note.isPinned}
+                  title={note.title}
+                  type={note.type}
+                  value={note.data}
+                  date={note.date}
+                  refresh={this.refresh}
+                  token={this.state.user.token}
+                />
+              ))}
+              {/* <Note value="1" />
             <Note value="2" />
             <Note value="3" />
             <Note value="4" />
@@ -557,7 +582,8 @@ export default class Dashboard extends React.Component {
             <Note value="6" />
             <Note value="7" />
             <Note value="8" /> */}
-          </Masonry>
+            </Masonry>
+          )}
         </NotesContainer>
       </DashboardContainer>
     );

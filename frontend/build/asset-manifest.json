@@ -1,0 +1,26 @@
+{
+  "files": {
+    "main.css": "/static/css/main.f846f263.chunk.css",
+    "main.js": "/static/js/main.f8663965.chunk.js",
+    "main.js.map": "/static/js/main.f8663965.chunk.js.map",
+    "runtime-main.js": "/static/js/runtime-main.c8a21426.js",
+    "runtime-main.js.map": "/static/js/runtime-main.c8a21426.js.map",
+    "static/js/2.e166d49d.chunk.js": "/static/js/2.e166d49d.chunk.js",
+    "static/js/2.e166d49d.chunk.js.map": "/static/js/2.e166d49d.chunk.js.map",
+    "index.html": "/index.html",
+    "precache-manifest.7a2b054af7a2227c4c15a3832e2cbbc6.js": "/precache-manifest.7a2b054af7a2227c4c15a3832e2cbbc6.js",
+    "service-worker.js": "/service-worker.js",
+    "static/css/main.f846f263.chunk.css.map": "/static/css/main.f846f263.chunk.css.map",
+    "static/js/2.e166d49d.chunk.js.LICENSE.txt": "/static/js/2.e166d49d.chunk.js.LICENSE.txt",
+    "static/media/ideable.svg": "/static/media/ideable.eedb6382.svg",
+    "static/media/pin-off.svg": "/static/media/pin-off.dd359a9a.svg",
+    "static/media/pin-on.svg": "/static/media/pin-on.8f04c5da.svg",
+    "static/media/profile.svg": "/static/media/profile.68f2a6aa.svg"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.c8a21426.js",
+    "static/js/2.e166d49d.chunk.js",
+    "static/css/main.f846f263.chunk.css",
+    "static/js/main.f8663965.chunk.js"
+  ]
+}
