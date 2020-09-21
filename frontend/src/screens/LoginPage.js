@@ -3,7 +3,7 @@ import styled from "styled-components";
 import axios from "axios";
 import SimpleReactValidator from "simple-react-validator";
 
-import colors from "../colors.json";
+import colors from "../assets/colors.json";
 import logo from "../assets/ideable.svg";
 
 const LoginContainer = styled.div`

@@ -1,230 +1,242 @@
 import React from "react";
 import styled from "styled-components";
+import Masonry from "react-masonry-css";
 
-import colors from "../colors.json";
+import colors from "../assets/colors.json";
 import logo from "../assets/ideable.svg";
+import profile from "../assets/profile.svg";
 
-const LoginContainer = styled.div`
+import Note from "../components/Note";
+import axios from "axios";
+
+const DashboardContainer = styled.div`
+  background-color: ${colors.background};
+  color: white;
   height: 100vh;
-  display: grid;
-  grid-template-columns: 2fr 3fr;
-
-  @media (max-width: 768px) {
-    grid-template-columns: 1fr;
-  }
-`;
-
-const Login = styled.div`
-  background-color: ${colors.foreground};
-  position: relative;
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  width: 100%;
-  color: white;
 
-  .logo-mobile {
-    display: none;
-    color: ${colors.text};
+  nav {
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 0.25rem;
+    margin-bottom: 0.25rem;
 
     @media (max-width: 768px) {
-      display: block;
+      margin-bottom: 0;
     }
 
-    header {
-      display: flex;
-      justify-content: center;
-      align-items: flex-end;
-      font-size: 2rem;
-      margin-bottom: 1rem;
-      img {
-        width: 4rem;
-        margin-right: 0.2rem;
-      }
-    }
-  }
-
-  .container {
-    /* background-color: ${colors.background}; */
-    display: flex;
-    flex-direction: column;
-    align-items: stretch;
-    justify-self: stretch;
-    padding: 0.75rem;
-    width: 100%;
-    max-width: 400px;
-    transition: all 0.5s linear;
-
-    .button {
-      margin-top: 2rem;
-      background-color: ${colors.blue};
-      padding: 0.75rem 1rem;
-      border-radius: 0.5rem;
-      text-align: center;
-    }
-
-    .label {
-      margin: 1rem 0 0.5rem 0;
+    .logo {
       color: ${colors.text};
-      animation: slide-up 0.4s ease;
-    }
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      font-size: 1.5rem;
 
-    input {
-      padding: 0.75rem 1rem;
-      outline-style: none;
-      border-radius: 0.5rem;
-      background-color: ${colors.background};
-      border: solid 1px ${colors.textgrey};
-      color: white;
-      animation: slide-up 0.4s ease;
-    }
-
-    .username {
-      display: ${(props) => (props.signup ? "block" : "none")};
-    }
-
-    @keyframes slide-up {
-      0% {
-        opacity: 0;
-        transform: translateY(20px);
-      }
-      100% {
-        opacity: 1;
-        transform: translateY(0);
+      img {
+        height: 2rem;
+        margin: 0.75rem 0.5rem 0.75rem 2rem;
       }
     }
-  }
 
-  .signup-message {
-    color: ${colors.text};
-    cursor: default;
+    .search {
+      display: flex;
+      flex: 1;
+      flex-direction: row;
+      align-items: center;
+      margin: 0 0.75rem;
+      border-radius: 1.5rem;
+      overflow: hidden;
+      background-color: ${colors.foreground};
 
-    span {
-      color: ${colors.pink};
-      cursor: pointer;
-
-      &:hover {
-        filter: brightness(1.2);
+      svg {
+        height: 1.5rem;
+        margin: 0 1rem;
+        color: ${colors.text};
       }
 
-      &:active {
-        opacity: 0.8;
+      @media (max-width: 768px) {
+        order: 1;
+        flex-basis: 100%;
+        margin-bottom: 0.75rem;
+      }
+
+      input {
+        outline: none;
+        flex: 1;
+        height: 2.5rem;
+        border-style: none;
+        background-color: ${colors.foreground};
+        color: ${colors.textgrey};
+        font-family: inherit;
+        font-size: inherit;
+        font-weight: inherit;
+
+        &:focus {
+          color: ${colors.text};
+        }
       }
     }
-  }
-`;
 
-const Landing = styled.div`
-  background-color: ${colors.background};
-  display: grid;
-  place-items: center;
-  color: ${colors.text};
-  grid-template-columns: 1fr 1fr 1fr;
-
-  @media (max-width: 768px) {
-    display: none;
+    .profile {
+      height: 2rem;
+      margin: 0.75rem 2rem 0.75rem 0;
+    }
   }
 `;
 
-const Note = styled.div`
-  background-color: ${colors.foreground};
-  display: flex;
+const NotesContainer = styled.div`
+  flex: 1;
   flex-direction: column;
-  align-items: stretch;
-  padding: 1rem 2rem;
-  position: relative;
-  border-radius: 0.5rem;
-  -moz-border-radius: 0.5rem;
+  overflow-y: scroll;
+  padding: 0 1rem 0 0;
 
-  &:before {
-    content: "";
-    position: absolute;
-    top: 0;
-    right: 0;
-    border-width: 0 1.75rem 1.75rem 0;
-    border-style: solid;
-    border-color: ${colors.pink} ${colors.background};
-    display: block;
-    width: 0;
-    -moz-border-radius: 0 0 0 0.5rem;
-    border-radius: 0 0 0 0.5rem;
-    -webkit-box-shadow: 0 1px 1px rgba(0, 0, 0, 0.3),
-      -1px 1px 1px rgba(0, 0, 0, 0.2);
-    -moz-box-shadow: 0 1px 1px rgba(0, 0, 0, 0.3),
-      -1px 1px 1px rgba(0, 0, 0, 0.2);
-    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.3), -1px 1px 1px rgba(0, 0, 0, 0.2);
+  .my-masonry-grid {
+    display: -webkit-box; /* Not needed if autoprefixing */
+    display: -ms-flexbox; /* Not needed if autoprefixing */
+    display: flex;
+    align-self: stretch;
+    margin-left: -1rem; /* gutter size offset */
+    width: auto;
+    max-width: 1200px;
+    margin: 0 auto;
   }
 
-  .title {
-    font-weight: bold;
-    color: white;
-    font-size: 2rem;
-    text-align: left;
-    margin-bottom: 2rem;
+  .my-masonry-grid_column {
+    padding-left: 1rem; /* gutter size */
+    background-clip: padding-box;
+    flex: 1;
   }
 
-  .logo {
-    width: 8rem;
-    align-self: center;
-    margin-bottom: 2rem;
+  &::-webkit-scrollbar {
+    width: 0.5rem;
   }
 
-  .note {
-    margin-bottom: 3rem;
+  &::-webkit-scrollbar {
+    width: 0.5rem;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: ${colors.foreground};
+    border-radius: 0.25rem;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: ${colors.blue};
+    border-radius: 0.25rem;
+  }
+
+  -webkit-scrollbar-thumb:hover {
+    background: #b30000;
   }
 `;
 
 export default class Dashboard extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { signup: false };
+    this.state = { user: this.props.user, notes: [], filteredNotes: [] };
+
+    this.refresh = this.refresh.bind(this);
+  }
+
+  refresh(notes) {
+    this.setState({ notes: notes });
+    this.props.refresh();
+  }
+
+  componentDidMount() {
+    axios
+      .get("/notes/list", { headers: { token: this.state.user.token } })
+      .then((response) => {
+        this.setState({ notes: response.data, filteredNotes: response.data });
+        this.props.refresh();
+      })
+      .catch((error) => {
+        if (error.response.data.message === "Invalid Token") {
+          localStorage.removeItem("user");
+          this.props.refresh();
+        }
+      })
+      .finally(() => {
+        console.log(this.state.notes);
+      });
   }
 
   render() {
     return (
-      <LoginContainer>
-        <Login signup={this.state.signup}>
-          <div className="logo-mobile">
-            <header>
-              <img className="logo" src={logo} />
-              {/* Ideable */}
-            </header>
-            <div>Organize yourself, at the speed of thought!</div>
+      <DashboardContainer>
+        <nav>
+          <div className="logo">
+            <img src={logo} />
+            Ideable
           </div>
-          <div className="container">
-            <div className="label username">Username</div>
-            <input type="text" className="username" />
-
-            <div className="label">Email</div>
-            <input type="email" />
-
-            <div className="label">Password</div>
-            <input type="password" />
-
-            <div className="button">
-              {this.state.signup ? "Sign Up" : "Login"}
-            </div>
+          <div className="search">
+            <svg
+              className="w-6 h-6"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+              />
+            </svg>
+            <input placeholder="Search" type="text" name="search" />
+            <svg
+              className="w-6 h-6"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M6 18L18 6M6 6l12 12"
+              />
+            </svg>
           </div>
-          <div className="signup-message">
-            {this.state.signup
-              ? "Already have an account? "
-              : "Don't have an account yet? "}
-            <span onClick={() => this.setState({ signup: !this.state.signup })}>
-              {this.state.signup ? "Login" : "Sign Up"}
-            </span>
-          </div>
-        </Login>
-        <Landing>
-          <div></div>
-          <Note>
-            <div className="title">DASHBOARD</div>
-            <img className="logo" src={logo} />
-            <div className="note">{JSON.stringify(this.props.user)}</div>
-          </Note>
-          <div></div>
-        </Landing>
-      </LoginContainer>
+          <img src={profile} className="profile" />
+        </nav>
+        <NotesContainer>
+          <Masonry
+            breakpointCols={{ default: 4, 992: 3, 768: 2, 576: 1 }}
+            className="my-masonry-grid"
+            columnClassName="my-masonry-grid_column"
+          >
+            {this.state.notes.map((note, index) => (
+              <Note
+                key={note._id}
+                noteId={note._id}
+                color={note.color}
+                isPinned={note.isPinned}
+                title={note.title}
+                type={note.type}
+                value={note.data}
+                date={note.date}
+                refresh={this.refresh}
+                token={this.state.user.token}
+              />
+            ))}
+            {/* <Note value="1" />
+            <Note value="2" />
+            <Note value="3" />
+            <Note value="4" />
+            <Note value="5" />
+            <Note value="6" />
+            <Note value="7" />
+            <Note value="8" /> */}
+          </Masonry>
+        </NotesContainer>
+      </DashboardContainer>
     );
   }
 }

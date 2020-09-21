@@ -3,6 +3,7 @@ const bodyParser = require("body-parser");
 const InitiateMongoServer = require("./config/db");
 
 const userRoute = require("./routes/userRoute");
+const notesRoute = require("./routes/notesRoute");
 
 // Init Mongo Server
 InitiateMongoServer();
@@ -20,6 +21,7 @@ app.get("/", (req, res) => {
 });
 
 app.use("/user", userRoute); // Route to handle signin and signup
+app.use("/notes", notesRoute); // Route to handle notes CRUD
 
 app.listen(PORT, (req, res) => {
   console.log(`Server Started at PORT ${PORT}`);

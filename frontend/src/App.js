@@ -22,32 +22,18 @@ export default class App extends React.Component {
       // Check if token inValid
       if (decodedToken.exp < dateNow.getTime() / 1000) {
         // Show Login page
-        this.setState({ isLoggedIn: false });
+        this.setState({ isLoggedIn: false, user: {} });
       } else {
         this.setState({ isLoggedIn: true, user: user });
       }
     } else {
       // Show Login Page
-      this.setState({ isLoggedIn: false });
+      this.setState({ isLoggedIn: false, user: {} });
     }
   }
 
   componentDidMount() {
-    const user = JSON.parse(localStorage.getItem("user"));
-    if (user && user.token) {
-      var decodedToken = jwt.decode(user.token);
-      var dateNow = new Date();
-      // Check if token inValid
-      if (decodedToken.exp < dateNow.getTime() / 1000) {
-        // Show Login page
-        this.setState({ isLoggedIn: false });
-      } else {
-        this.setState({ isLoggedIn: true, user: user });
-      }
-    } else {
-      // Show Login Page
-      this.setState({ isLoggedIn: false });
-    }
+    this.refresh();
   }
 
   render() {
