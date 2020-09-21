@@ -81,9 +81,70 @@ const DashboardContainer = styled.div`
       }
     }
 
+    .profile-dropdown {
+      position: relative;
+      display: inline-block;
+    }
+
     .profile {
       height: 2rem;
       margin: 0.75rem 2rem 0.75rem 0;
+      cursor: pointer;
+    }
+
+    .profile-big {
+      height: 3rem;
+    }
+
+    .dropdown-content {
+      /* display: none; */
+      position: absolute;
+      background-color: ${colors.foreground};
+      border-radius: 0.5rem;
+      padding: 1rem 0;
+      min-width: 15rem;
+      overflow: auto;
+      right: 0;
+      margin: 0 1rem;
+      box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+      z-index: 1;
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+
+      div {
+        margin-top: 0.75rem;
+      }
+
+      .email {
+        color: ${colors.textgrey};
+      }
+
+      .username {
+        color: ${colors.text};
+        font-weight: bold;
+      }
+
+      .logout {
+        padding: 0.75rem 1rem;
+        background-color: #dc3545;
+        border-radius: 5rem;
+        cursor: pointer;
+
+        &:hover {
+          filter: brightness(1.2);
+        }
+
+        &:active {
+          filter: brightness(1);
+          opacity: 0.8;
+        }
+      }
+
+      &.active {
+        display: flex;
+      }
     }
   }
 `;
@@ -137,21 +198,53 @@ const NotesContainer = styled.div`
 export default class Dashboard extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { user: this.props.user, notes: [], filteredNotes: [] };
+    this.state = {
+      user: this.props.user,
+      isDropdownOpen: false,
+      notes: [],
+      filteredNotes: [],
+      filter: "",
+    };
 
     this.refresh = this.refresh.bind(this);
+    this.handleSearch = this.handleSearch.bind(this);
   }
 
   refresh(notes) {
-    this.setState({ notes: notes });
+    var filteredNotes = notes.sort((a, b) => {
+      return a.isPinned === b.isPinned ? 0 : a.isPinned ? -1 : 1;
+    });
+
+    this.setState({ notes: notes, filteredNotes: filteredNotes, filter: "" });
     this.props.refresh();
   }
 
+  handleSearch(event, notes) {
+    this.setState({ filter: event.target.value });
+    const lowercaseFilter = event.target.value.toLowerCase();
+    var sorted = notes.sort((a, b) => {
+      return a.isPinned === b.isPinned ? 0 : a.isPinned ? -1 : 1;
+    });
+
+    this.setState({
+      filteredNotes: sorted.filter((item) => {
+        return (
+          item["title"].toLowerCase().includes(lowercaseFilter) ||
+          item["data"].toLowerCase().includes(lowercaseFilter)
+        );
+      }),
+    });
+  }
+
   componentDidMount() {
+    console.log(this.state.user);
     axios
       .get("/notes/list", { headers: { token: this.state.user.token } })
       .then((response) => {
-        this.setState({ notes: response.data, filteredNotes: response.data });
+        var filteredNotes = response.data.sort((a, b) => {
+          return a.isPinned === b.isPinned ? 0 : a.isPinned ? -1 : 1;
+        });
+        this.setState({ notes: response.data, filteredNotes: filteredNotes });
         this.props.refresh();
       })
       .catch((error) => {
@@ -161,7 +254,7 @@ export default class Dashboard extends React.Component {
         }
       })
       .finally(() => {
-        console.log(this.state.notes);
+        console.log(this.state.filteredNotes);
       });
   }
 
@@ -188,7 +281,15 @@ export default class Dashboard extends React.Component {
                 d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
               />
             </svg>
-            <input placeholder="Search" type="text" name="search" />
+            <input
+              placeholder="Search"
+              type="text"
+              name="search"
+              onChange={(event) => {
+                this.handleSearch(event, this.state.notes);
+              }}
+              value={this.state.filter}
+            />
             <svg
               className="w-6 h-6"
               fill="none"
@@ -204,7 +305,35 @@ export default class Dashboard extends React.Component {
               />
             </svg>
           </div>
-          <img src={profile} className="profile" />
+          <div className="profile-dropdown">
+            <img
+              src={profile}
+              className="profile"
+              onClick={() => {
+                this.setState({ isDropdownOpen: !this.state.isDropdownOpen });
+              }}
+            />
+            <div
+              id="profile-dropdown"
+              class={
+                "dropdown-content" +
+                (this.state.isDropdownOpen ? " active" : "")
+              }
+            >
+              <img src={profile} className="profile-big" />
+              <div className="username">{this.props.user.details.username}</div>
+              <div className="email">{this.props.user.details.email}</div>
+              <div
+                className="logout"
+                onClick={() => {
+                  localStorage.removeItem("user");
+                  this.props.refresh();
+                }}
+              >
+                Log Out
+              </div>
+            </div>
+          </div>
         </nav>
         <NotesContainer>
           <Masonry
@@ -212,7 +341,7 @@ export default class Dashboard extends React.Component {
             className="my-masonry-grid"
             columnClassName="my-masonry-grid_column"
           >
-            {this.state.notes.map((note, index) => (
+            {this.state.filteredNotes.map((note, index) => (
               <Note
                 key={note._id}
                 noteId={note._id}

@@ -148,7 +148,9 @@ export default class Dashboard extends React.Component {
     return (
       <Note className={"c" + this.props.color}>
         <div className="title">{this.props.title}</div>
-        <div className="message">{this.props.value}</div>
+        <div className="message" contentEditable={true} role="textbox">
+          {this.props.value}
+        </div>
         <div className="blade">
           <div className="delete button" onClick={this.handleDelete}>
             <svg

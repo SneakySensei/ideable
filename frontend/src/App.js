@@ -9,7 +9,7 @@ import "./App.css";
 export default class App extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { isLoggedIn: false, user: {} };
+    this.state = { isLoggedIn: false, user: localStorage.getItem("user") };
 
     this.refresh = this.refresh.bind(this);
   }
