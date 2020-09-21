@@ -4,7 +4,7 @@
   "description": "Ideable is a simple and intuitive note taking web app which helps you organize yourself, at the speed of thought.",
   "main": "server.js",
   "scripts": {
-    "start": "cd frontend && npm install && npm run build && cd .. && node server.js"
+    "start": "node server.js"
   },
   "repository": {
     "type": "git",
