@@ -16,8 +16,11 @@ const PORT = process.env.PORT || 4000;
 // Body Parser Middleware
 app.use(bodyParser.json());
 
+app.use(express.static("./frontend/build/"));
 app.get("/", (req, res) => {
-  res.json({ message: "API Working" });
+  res.sendFile("index.html", {
+    root: __dirname + "/frontend/build/",
+  });
 });
 
 app.use("/user", userRoute); // Route to handle signin and signup

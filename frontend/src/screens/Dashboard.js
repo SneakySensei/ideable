@@ -286,6 +286,7 @@ export default class Dashboard extends React.Component {
       editorText: false,
       activeNote: undefined,
       color: 0,
+      showAddButton: false,
     };
 
     this.refresh = this.refresh.bind(this);
@@ -310,6 +311,7 @@ export default class Dashboard extends React.Component {
       .then((response) => {
         this.setState({ notes: response.data });
         this.props.refresh();
+        this.setState({ showAddButton: true });
       })
       .catch((error) => {
         if (error.response.data.message === "Invalid Token") {
@@ -350,7 +352,7 @@ export default class Dashboard extends React.Component {
 
     return (
       <DashboardContainer>
-        {this.state.notes.length !== 0 && (
+        {this.state.showAddButton && (
           <div className="add-button">
             <svg
               onClick={() => {
