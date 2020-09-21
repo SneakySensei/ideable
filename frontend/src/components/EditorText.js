@@ -158,6 +158,14 @@ export default class EditorText extends React.Component {
     this.state = { note: this.props.note, html: "", title: "", color: 0 };
     this.handleChangeData = this.handleChangeData.bind(this);
     this.handleChangeTitle = this.handleChangeTitle.bind(this);
+    this.handleKeyDown = this.handleKeyDown.bind(this);
+    this.handleUpdate = this.handleUpdate.bind(this);
+  }
+
+  handleKeyDown(event) {
+    if (event.key === "Enter" && event.ctrlKey) {
+      this.handleUpdate(event);
+    }
   }
 
   handleUpdate(e) {
@@ -328,7 +336,7 @@ export default class EditorText extends React.Component {
               </div>
             </div>
             <svg
-              onClick={this.handleUpdate.bind(this)}
+              onClick={this.handleUpdate}
               className="w-6 h-6"
               fill="none"
               stroke="currentColor"
@@ -353,6 +361,7 @@ export default class EditorText extends React.Component {
           />
           <ContentEditable
             className="content"
+            onKeyDown={this.handleKeyDown}
             innerRef={this.contentEditable}
             html={this.state.html} // innerHTML of the editable div
             disabled={false} // use true to disable editing

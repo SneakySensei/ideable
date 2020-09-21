@@ -236,7 +236,7 @@ export default class LoginPage extends React.Component {
 
     this.handleInputChange = this.handleInputChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
-
+    this.handleKeyDown = this.handleKeyDown.bind(this);
     this.validator = new SimpleReactValidator();
   }
 
@@ -250,7 +250,13 @@ export default class LoginPage extends React.Component {
     });
   }
 
-  handleSubmit(event) {
+  handleKeyDown(event) {
+    if (event.key === "Enter") {
+      this.handleSubmit();
+    }
+  }
+
+  handleSubmit() {
     this.setState({ message: "" });
     if (
       this.validator.fieldValid("email") &&
@@ -333,6 +339,7 @@ export default class LoginPage extends React.Component {
               name="password"
               value={this.state.password}
               onChange={this.handleInputChange}
+              onKeyDown={this.handleKeyDown}
             />
             {this.validator.message(
               "password",
