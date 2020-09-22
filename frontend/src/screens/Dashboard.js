@@ -132,6 +132,10 @@ const DashboardContainer = styled.div`
         margin: 0 0.1rem;
         border: 0.2rem solid ${colors.text};
 
+        @media (max-width: 576px) {
+          border-width: 0.1rem;
+        }
+
         &.c0 {
           border-color: ${colors.text};
         }
@@ -158,6 +162,11 @@ const DashboardContainer = styled.div`
         margin: 0.19rem 0.19rem 0 0.19rem;
         height: 1.2rem;
         width: 1.2rem;
+
+        @media (max-width: 576px) {
+          height: 1rem;
+          width: 1rem;
+        }
       }
     }
 
@@ -168,7 +177,7 @@ const DashboardContainer = styled.div`
 
     .profile {
       height: 2rem;
-      margin: 0.75rem 2rem 0.75rem 0.75rem;
+      margin: 0.75rem 2rem 0.75rem 0.5rem;
       cursor: pointer;
     }
 
