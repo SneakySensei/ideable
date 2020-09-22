@@ -155,11 +155,17 @@ export default class EditorText extends React.Component {
     super(props);
 
     this.contentEditable = React.createRef();
-    this.state = { note: this.props.note, html: "", title: "", color: 0 };
+    this.state = {
+      note: this.props.note,
+      html: "<i>Start typing your note here....</i>",
+      title: "",
+      color: 0,
+    };
     this.handleChangeData = this.handleChangeData.bind(this);
     this.handleChangeTitle = this.handleChangeTitle.bind(this);
     this.handleKeyDown = this.handleKeyDown.bind(this);
     this.handleUpdate = this.handleUpdate.bind(this);
+    this.handleFocus = this.handleFocus.bind(this);
   }
 
   handleKeyDown(event) {
@@ -240,6 +246,12 @@ export default class EditorText extends React.Component {
         title: this.props.note.title,
         color: this.props.note.color,
       });
+    }
+  }
+
+  handleFocus(evt) {
+    if (this.state.html === "<i>Start typing your note here....</i>") {
+      this.setState({ html: "" });
     }
   }
 
@@ -360,6 +372,7 @@ export default class EditorText extends React.Component {
             placeholder="Add Title"
           />
           <ContentEditable
+            onFocus={this.handleFocus}
             className="content"
             onKeyDown={this.handleKeyDown}
             innerRef={this.contentEditable}
