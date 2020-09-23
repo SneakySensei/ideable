@@ -19,8 +19,7 @@
 </p>
 
 [![HitCount](http://hits.dwyl.com/SneakySensei/ideable-srmkzilla.svg)](http://hits.dwyl.com/SneakySensei/ideable-srmkzilla)
-
-[![MIT License](https://img.shields.io/github/license/SneakySensei/ideable-srmkzilla.svg?style=flat-square)](https://github.com/SneakySensei/ideable-srmkzilla/blob/master/LICENSE.txt)
+[![MIT License](https://img.shields.io/github/license/SneakySensei/ideable-srmkzilla.svg?style=flat-square)](https://github.com/SneakySensei/ideable-srmkzilla/blob/master/LICENSE)
 
 <!-- TABLE OF CONTENTS -->
 
