@@ -20,7 +20,7 @@
 
 <p align="center">
   <a href="http://hits.dwyl.com/SneakySensei/ideable-srmkzilla"><img src="http://hits.dwyl.com/SneakySensei/ideable-srmkzilla.svg" /></a>
-  [![MIT License](https://img.shields.io/github/license/sneakysensei/ideable-srmkzilla)](https://github.com/SneakySensei/ideable-srmkzilla/blob/master/LICENSE)
+  <a href="https://github.com/SneakySensei/ideable-srmkzilla/blob/master/LICENSE"><img src="https://img.shields.io/github/license/sneakysensei/ideable-srmkzilla" /></a>
 </p>
 
 <!-- TABLE OF CONTENTS -->
