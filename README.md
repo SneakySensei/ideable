@@ -18,8 +18,10 @@
   </p>
 </p>
 
-[![HitCount](http://hits.dwyl.com/SneakySensei/ideable-srmkzilla.svg)](http://hits.dwyl.com/SneakySensei/ideable-srmkzilla)
-[![MIT License](https://img.shields.io/github/license/sneakysensei/ideable-srmkzilla)](https://github.com/SneakySensei/ideable-srmkzilla/blob/master/LICENSE)
+<p align="center">
+  [![HitCount](http://hits.dwyl.com/SneakySensei/ideable-srmkzilla.svg)](http://hits.dwyl.com/SneakySensei/ideable-srmkzilla)
+  [![MIT License](https://img.shields.io/github/license/sneakysensei/ideable-srmkzilla)](https://github.com/SneakySensei/ideable-srmkzilla/blob/master/LICENSE)
+</p>
 
 <!-- TABLE OF CONTENTS -->
 
