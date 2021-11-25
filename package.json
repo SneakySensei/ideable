@@ -1,27 +1,29 @@
 {
-  "name": "ideable-srmkzilla",
-  "version": "1.0.0",
-  "description": "Ideable is a simple and intuitive note taking web app which helps you organize yourself, at the speed of thought.",
-  "main": "server.js",
-  "scripts": {
-    "start": "node server.js"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/SneakySensei/ideable-srmkzilla.git"
-  },
-  "author": "Snehil",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/SneakySensei/ideable-srmkzilla/issues"
-  },
-  "homepage": "https://github.com/SneakySensei/ideable-srmkzilla#readme",
-  "dependencies": {
-    "bcryptjs": "^2.4.3",
-    "body-parser": "^1.19.0",
-    "express": "^4.17.1",
-    "express-validator": "^6.6.1",
-    "jsonwebtoken": "^8.5.1",
-    "mongoose": "^5.10.6"
-  }
+	"name": "ideable",
+	"version": "1.0.0",
+	"description": "Ideable is a simple and intuitive note taking web app which helps you organize yourself, at the speed of thought.",
+	"main": "app.js",
+	"scripts": {
+		"start": "node app.js",
+		"dev": "nodemon app.js"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/SneakySensei/ideable.git"
+	},
+	"author": "Snehil",
+	"license": "ISC",
+	"bugs": {
+		"url": "https://github.com/SneakySensei/ideable/issues"
+	},
+	"homepage": "https://github.com/SneakySensei/ideable#readme",
+	"dependencies": {
+		"bcryptjs": "^2.4.3",
+		"body-parser": "^1.19.0",
+		"dotenv": "^10.0.0",
+		"express": "^4.17.1",
+		"express-validator": "^6.6.1",
+		"jsonwebtoken": "^8.5.1",
+		"mongoose": "^5.10.6"
+	}
 }

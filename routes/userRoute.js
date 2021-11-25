@@ -15,71 +15,72 @@ const auth = require("../middleware/auth");
  */
 
 router.post(
-  "/signup",
-  [
-    check("username", "Please enter a valid username").not().isEmpty(),
-    check("email", "Please enter a valid email").isEmail(),
-    check("password", "Please enter a valid password").isLength({ min: 6 }),
-  ],
-  async (req, res) => {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      return res.status(400).json({
-        errors: errors.array(),
-      });
-    }
+	"/signup",
+	[
+		check("username", "Please enter a valid username").not().isEmpty(),
+		check("email", "Please enter a valid email").isEmail(),
+		check("password", "Please enter a valid password").isLength({ min: 6 }),
+	],
+	async (req, res) => {
+		console.log("signup");
+		const errors = validationResult(req);
+		if (!errors.isEmpty()) {
+			return res.status(400).json({
+				errors: errors.array(),
+			});
+		}
 
-    const { username, email, password } = req.body;
+		const { username, email, password } = req.body;
 
-    try {
-      let user = await User.findOne({
-        email,
-      });
+		try {
+			let user = await User.findOne({
+				email,
+			});
 
-      if (user) {
-        return res.status(400).json({
-          message: "User already exists. Please use a different email.",
-        });
-      }
+			if (user) {
+				return res.status(400).json({
+					message: "User already exists. Please use a different email.",
+				});
+			}
 
-      user = new User({
-        username,
-        email,
-        password,
-      });
+			user = new User({
+				username,
+				email,
+				password,
+			});
 
-      const salt = await bcrypt.genSalt(10);
-      user.password = await bcrypt.hash(password, salt);
+			const salt = await bcrypt.genSalt(10);
+			user.password = await bcrypt.hash(password, salt);
 
-      await user.save();
+			await user.save();
 
-      const payload = {
-        user: {
-          id: user.id,
-        },
-      };
+			const payload = {
+				user: {
+					id: user.id,
+				},
+			};
 
-      jwt.sign(
-        payload,
-        process.env.secret,
-        {
-          expiresIn: 50000,
-        },
-        (err, token) => {
-          if (err) throw err;
-          res.status(200).json({
-            details: user,
-            token,
-          });
-        }
-      );
-    } catch (err) {
-      console.log(err.message);
-      res
-        .status(500)
-        .send("Error in Saving. If you're server admin, check server log.");
-    }
-  }
+			jwt.sign(
+				payload,
+				process.env.JWT_SECRET,
+				{
+					expiresIn: 50000,
+				},
+				(err, token) => {
+					if (err) throw err;
+					res.status(200).json({
+						details: user,
+						token,
+					});
+				}
+			);
+		} catch (err) {
+			console.log(err.message);
+			res
+				.status(500)
+				.send("Error in Saving. If you're server admin, check server log.");
+		}
+	}
 );
 
 /**
@@ -89,63 +90,63 @@ router.post(
  */
 
 router.post(
-  "/login",
-  [
-    check("email", "Please enter a valid email").isEmail(),
-    check("password", "Please enter a valid password").isLength({ min: 6 }),
-  ],
-  async (req, res) => {
-    const errors = validationResult(req);
+	"/login",
+	[
+		check("email", "Please enter a valid email").isEmail(),
+		check("password", "Please enter a valid password").isLength({ min: 6 }),
+	],
+	async (req, res) => {
+		const errors = validationResult(req);
 
-    if (!errors.isEmpty()) {
-      return res.status(400).json({
-        errors: errors.array(),
-      });
-    }
+		if (!errors.isEmpty()) {
+			return res.status(400).json({
+				errors: errors.array(),
+			});
+		}
 
-    const { email, password } = req.body;
-    try {
-      let user = await User.findOne({
-        email,
-      });
-      if (!user)
-        return res.status(400).json({
-          message: "No user found with that email. New user? Signup",
-        });
+		const { email, password } = req.body;
+		try {
+			let user = await User.findOne({
+				email,
+			});
+			if (!user)
+				return res.status(400).json({
+					message: "No user found with that email. New user? Signup",
+				});
 
-      const isMatch = await bcrypt.compare(password, user.password);
-      if (!isMatch)
-        return res.status(400).json({
-          message: "Incorrect Password!",
-        });
+			const isMatch = await bcrypt.compare(password, user.password);
+			if (!isMatch)
+				return res.status(400).json({
+					message: "Incorrect Password!",
+				});
 
-      const payload = {
-        user: {
-          id: user.id,
-        },
-      };
+			const payload = {
+				user: {
+					id: user.id,
+				},
+			};
 
-      jwt.sign(
-        payload,
-        process.env.secret,
-        {
-          expiresIn: 50000,
-        },
-        (err, token) => {
-          if (err) throw err;
-          res.status(200).json({
-            details: user,
-            token,
-          });
-        }
-      );
-    } catch (err) {
-      console.log(err);
-      res.status(500).json({
-        message: "Server Error",
-      });
-    }
-  }
+			jwt.sign(
+				payload,
+				process.env.JWT_SECRET,
+				{
+					expiresIn: 50000,
+				},
+				(err, token) => {
+					if (err) throw err;
+					res.status(200).json({
+						details: user,
+						token,
+					});
+				}
+			);
+		} catch (err) {
+			console.log(err);
+			res.status(500).json({
+				message: "Server Error",
+			});
+		}
+	}
 );
 
 /**
@@ -155,12 +156,12 @@ router.post(
  */
 
 router.get("/details", auth, async (req, res) => {
-  try {
-    const user = await User.findById(req.user.id);
-    res.json(user);
-  } catch (err) {
-    res.send({ message: "Error in Fetching user" });
-  }
+	try {
+		const user = await User.findById(req.user.id);
+		res.json(user);
+	} catch (err) {
+		res.send({ message: "Error in Fetching user" });
+	}
 });
 
 module.exports = router;
