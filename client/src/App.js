@@ -1,5 +1,8 @@
+import { useState } from "react";
 import { createGlobalStyle } from "styled-components";
 import AuthPage from "./pages/AuthPage";
+import Notes from "./pages/Notes";
+import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 
 const GlobalStyles = createGlobalStyle`
   * {
@@ -9,14 +12,24 @@ const GlobalStyles = createGlobalStyle`
 `;
 
 const App = () => {
+	const [user, setUser] = useState({});
+
+	console.log(user);
+
 	return (
-		<>
+		<Router>
 			<GlobalStyles />
-			<AuthPage />
-		</>
+			<Switch>
+				<Route path="/login">
+					<AuthPage setUser={setUser} />
+				</Route>
+
+				<Route path="/">
+					<Notes />
+				</Route>
+			</Switch>
+		</Router>
 	);
 };
 
 export default App;
-
-export const time = "12:00AM";
