@@ -3,6 +3,7 @@ import { createGlobalStyle } from "styled-components";
 import AuthPage from "./pages/AuthPage";
 import Notes from "./pages/Notes";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
+import { useSelector } from "react-redux";
 
 const GlobalStyles = createGlobalStyle`
   * {
@@ -12,7 +13,7 @@ const GlobalStyles = createGlobalStyle`
 `;
 
 const App = () => {
-	const [user, setUser] = useState({});
+	const user = useSelector((state) => state.user);
 
 	console.log(user);
 
@@ -21,7 +22,7 @@ const App = () => {
 			<GlobalStyles />
 			<Switch>
 				<Route path="/login">
-					<AuthPage setUser={setUser} />
+					<AuthPage />
 				</Route>
 
 				<Route path="/">

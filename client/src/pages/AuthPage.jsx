@@ -1,10 +1,13 @@
 import React, { useState } from "react";
 import axios from "axios";
+import { useDispatch } from "react-redux";
+import { loginUser } from "../store/user/User.actions";
 
-const AuthPage = ({ setUser }) => {
+const AuthPage = () => {
 	const [email, setEmail] = useState("");
 	const [password, setPassword] = useState("");
 	const [passwordVisible, setPasswordVisible] = useState("password");
+	const dispatch = useDispatch();
 
 	const handleEmailChange = (e) => {
 		setEmail(e.target.value);
@@ -23,7 +26,7 @@ const AuthPage = ({ setUser }) => {
 				password: password,
 			})
 			.then((res) => {
-				setUser(res.data);
+				dispatch(loginUser(res.data));
 			})
 			.catch((err) => {
 				console.log(err);
